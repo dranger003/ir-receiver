@@ -6,24 +6,38 @@
 
 #define IR_PIN				A0
 
-// GWC18KG-D3DNA6C/I
-#define IR_PERIOD			26.701632
-#define IR_COUNT			69
+// KDL-50W790B
+#define IR_PERIOD			24.947
+#define IR_COUNT			0//13 - 1
 #define IR_THRESHOLD		3
 #define IR_LIMIT			100
 
 const uint16_t _pc[][2] =
 {
-	{ 336, 168 },
-	{  23,  22 },
-	{  23,  63 },
-	{  23, 745 },
-	{   0,   0 },
+	{ 97, 24 },
+	{ 24, 24 },
+	{ 48, 24 },
+	{ 0, 0 },
 };
+
+// GWC18KG-D3DNA6C/I
+//#define IR_PERIOD			26.701632
+//#define IR_COUNT			70 - 1
+//#define IR_THRESHOLD		3
+//#define IR_LIMIT			100
+//
+//const uint16_t _pc[][2] =
+//{
+//	{ 336, 168 },
+//	{  23,  22 },
+//	{  23,  63 },
+//	{  23, 745 },
+//	{   0,   0 },
+//};
 
 // VIP2262
 //#define IR_PERIOD			27.586206
-//#define IR_COUNT			17
+//#define IR_COUNT			18 - 1
 //#define IR_THRESHOLD		3
 //#define IR_LIMIT			100
 //
@@ -39,7 +53,7 @@ const uint16_t _pc[][2] =
 
 // HWC560S
 //#define IR_PERIOD			26.473936
-//#define IR_COUNT			49
+//#define IR_COUNT			50 - 1
 //#define IR_THRESHOLD		3
 //#define IR_LIMIT			100
 //
@@ -58,8 +72,6 @@ namespace Receiver
 	uint32_t _ts[512] = { 0 };
 	uint8_t _tt[512] = { 0 };
 	uint32_t t = 0;
-
-	uint8_t _buf[512] = { 0 };
 
 	class Program
 	{
@@ -80,10 +92,17 @@ namespace Receiver
 			if (Serial.available())
 			{
 				uint8_t k = Serial.read();
-				if (k == 'f')
-					System.bootloader();
-				else if (k == 'd')
-					_Dump();
+				switch (k)
+				{
+					case 'f':
+						System.bootloader();
+						break;
+					case 'd':
+						_Dump();
+						break;
+					default:
+						break;
+				}
 			}
 
 			if (IR_COUNT && _v >= IR_COUNT * 2)
